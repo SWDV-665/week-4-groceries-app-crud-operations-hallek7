@@ -3,52 +3,51 @@ import { AlertController } from '@ionic/angular';
 import { GroceriesServiceService } from './groceries-service.service';
 
 @Injectable({
-  providedIn: 'root'
+providedIn: 'root'
 })
 export class InputDialogServiceService {
 
-  async showAlert(item?, index?) {
-    const alert = await this.alertCtrl.create({
-      header: item? 'Edit Item' : 'Add Item',
-      message: item? 'Please edit item...' : "Please enter item...",
-      inputs: [
-        {
-          name: 'name',
-          placeholder: 'Name',
-          value: item? item.name : null
-        },
-        {
-          name: 'quantity',
-          value: item? item.quantity: null,
-          placeholder: 'Quantity'
+async showAlert(item?, index?) {
+  const alert = await this.alertCtrl.create({
+    header: item? 'Edit Item' : 'Add Item',
+    message: item? 'Please edit item...' : "Please enter item...",
+    inputs: [
+      {
+        name: 'name',
+        placeholder: 'Name',
+        value: item? item.name : null
+      },
+      {
+        name: 'quantity',
+        value: item? item.quantity: null,
+        placeholder: 'Quantity'
+      }
+    ],
+    
+    buttons: [
+      {
+        text: 'Cancel',
+        handler: data => {
+          console.log('Cancel clicked');
         }
-      ],
-      
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            console.log('Cancel clicked');
+      }, 
+      {
+        text: 'Save',
+        handler: item => {
+          console.log('Saved clicked', item);
+          if (index !== undefined){
+            this.dataService.editItem(item, index);
           }
-        }, 
-        {
-          text: 'Save',
-          handler: item => {
-            console.log('Saved clicked', item);
-            if (index !== undefined){
-              this.dataService.editItem(item, index);
-            }
-            else{
-              this.dataService.addItem(item);
-            }
+          else{
+            this.dataService.addItem(item);
           }
         }
-      ]
-    });
+      }
+    ]
+  });
 
-    await alert.present();
-  }
-  constructor(public dataService: GroceriesServiceService, public alertCtrl: AlertController) { }
+  await alert.present();
+}
+constructor(public dataService: GroceriesServiceService, public alertCtrl: AlertController) { }
 }
 
- 
